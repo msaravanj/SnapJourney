@@ -79,7 +79,7 @@ const LocationPicker = () => {
 
   return (
     <View style={styles.container}>
-      <MapboxAutocomplete />
+      <MapboxAutocomplete address={address} />
       <MapView
         style={styles.map}
         region={{

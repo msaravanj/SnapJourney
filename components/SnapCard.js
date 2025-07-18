@@ -2,6 +2,7 @@ import { Card, Text, IconButton, Button, TextInput } from "react-native-paper";
 import { StyleSheet, Pressable, View, Modal } from "react-native";
 import { useState } from "react";
 import { updateSnap } from "../util/database";
+import MapboxAutocompleteEdit from "./MapboxAutocompleteEdit";
 
 const SnapCard = (props) => {
   const [expanded, setExpanded] = useState(false);
@@ -10,6 +11,10 @@ const SnapCard = (props) => {
   const [editTitle, setEditTitle] = useState(props.title);
   const [editDescription, setEditDescription] = useState(props.description);
   const [editAddress, setEditAddress] = useState(props.address);
+  const [editLocation, setEditLocation] = useState([
+    props.latitude,
+    props.longitude,
+  ]);
 
   const handleSave = () => {
     updateSnap({
@@ -17,8 +22,8 @@ const SnapCard = (props) => {
       description: editDescription,
       address: editAddress,
       imageUri: props.imageUri,
-      latitude: props.latitude,
-      longitude: props.longitude,
+      latitude: editLocation[0],
+      longitude: editLocation[1],
       createdAt: props.createdAt,
     });
     setModalVisible(false);
@@ -85,11 +90,16 @@ const SnapCard = (props) => {
               multiline={true}
               style={{ marginBottom: 10 }}
             />
-            <TextInput
+            {/* <TextInput
               label="Address"
               value={editAddress}
               onChangeText={setEditAddress}
               style={{ marginBottom: 10 }}
+            /> */}
+            <MapboxAutocompleteEdit
+              address={editAddress}
+              onSetAddress={setEditAddress}
+              onSetLocation={setEditLocation}
             />
             <Button
               mode="contained"

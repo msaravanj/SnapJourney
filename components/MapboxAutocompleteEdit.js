@@ -1,22 +1,12 @@
 import { useState } from "react";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
-import {
-  updateLocation,
-  updateLocationName,
-} from "../store/redux/slices/locationSlice";
+import { TextInput } from "react-native-paper";
 import { MAPBOX_TOKEN } from "@env";
 
 const MapboxAutocomplete = (props) => {
   const [value, setValue] = useState(props.address || "");
   const [suggestions, setSuggestions] = useState([]);
-  const dispatch = useDispatch();
 
   const TOKEN = MAPBOX_TOKEN;
 
@@ -38,10 +28,10 @@ const MapboxAutocomplete = (props) => {
   return (
     <View style={styles.container}>
       <TextInput
+        label="Address"
         placeholder="Search for a place"
         value={value}
         onChangeText={handleChange}
-        style={styles.input}
       />
       <View style={styles.suggestionsContainer}>
         {suggestions.slice(0, 4).map((item) => (
@@ -49,9 +39,10 @@ const MapboxAutocomplete = (props) => {
             key={item.id}
             style={styles.suggestion}
             onPress={() => {
-              dispatch(updateLocationName(item.place_name));
+              props.onSetAddress(item.place_name);
+              setValue(item.place_name);
               const [long, lat] = item.center;
-              dispatch(updateLocation([lat, long]));
+              props.onSetLocation([lat, long]);
               setTimeout(() => setSuggestions([]), 300);
             }}
           >
